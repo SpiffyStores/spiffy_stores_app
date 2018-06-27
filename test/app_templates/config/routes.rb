@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  mount ShopifyApp::Engine, at: '/'
+  mount SpiffyStoresApp::Engine, at: '/'
   root to: "application#show"
 end

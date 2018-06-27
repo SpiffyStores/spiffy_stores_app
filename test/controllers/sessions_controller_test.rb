@@ -1,144 +1,148 @@
 require 'test_helper'
 
-module ShopifyApp
+module SpiffyStores
+  class AfterAuthenticateJob < ActiveJob::Base
+    def perform; end
+  end
+end
+
+module SpiffyStoresApp
   class SessionsControllerTest < ActionController::TestCase
 
     setup do
-      @routes = ShopifyApp::Engine.routes
-      ShopifyApp::SessionRepository.storage = InMemorySessionStore
-      ShopifyApp.configuration = nil
+      @routes = SpiffyStoresApp::Engine.routes
+      SpiffyStoresApp::SessionRepository.storage = SpiffyStoresApp::InMemorySessionStore
+      SpiffyStoresApp.configuration = nil
 
       I18n.locale = :en
     end
 
-    test "#new should authenticate the shop if the shop param exists" do
-      ShopifyApp.configuration.embedded_app = true
-      auth_url = '/auth/shopify?shop=my-shop.myshopify.com'
-      get :new, shop: 'my-shop'
-      assert_match /window\.top\.location\.href = "#{Regexp.escape(auth_url)}"/, response.body
+    test "#new should authenticate the shop if a valid store param exists" do
+      spiffy_stores_domain = 'my-shop.spiffystores.com'
+      get :new, params: { store: 'my-shop' }
+      assert_redirected_to_authentication(spiffy_stores_domain, response)
     end
 
-    test "#new should authenticate the shop if the shop param exists non embedded" do
-      ShopifyApp.configuration.embedded_app = false
-      auth_url = '/auth/shopify?shop=my-shop.myshopify.com'
-      get :new, shop: 'my-shop'
-      assert_match /window\.location\.href = "#{Regexp.escape(auth_url)}"/, response.body
+    test "#new should authenticate the shop if a valid store param exists non embedded" do
+      SpiffyStoresApp.configuration.embedded_app = false
+      get :new, params: { store: 'my-shop' }
+      assert_redirected_to '/auth/spiffy'
+      assert_equal session['spiffy.omniauth_params'][:store], 'my-shop.spiffystores.com'
     end
 
-    test "#new should trust the shop param over the current session" do
-      ShopifyApp.configuration.embedded_app = true
+    test "#new should trust the store param over the current session" do
       previously_logged_in_shop_id = 1
-      session[:shopify] = previously_logged_in_shop_id
-      new_shop_domain = "new-shop.myshopify.com"
-      auth_url = "/auth/shopify?shop=#{new_shop_domain}"
-      get :new, shop: new_shop_domain
-      assert_match /window\.top\.location\.href = "#{Regexp.escape(auth_url)}"/, response.body
+      session[:spiffy_stores] = previously_logged_in_shop_id
+      new_shop_domain = "new-shop.spiffystores.com"
+      get :new, params: { store: new_shop_domain }
+      assert_redirected_to_authentication(new_shop_domain, response)
     end
 
-    test "#new should render a full-page if the shop param doesn't exist" do
+    test "#new should render a full-page if the store param doesn't exist" do
       get :new
       assert_response :ok
-      assert_match %r{Shopify App — Installation}, response.body
+      assert_match %r{Spiffy Stores App — Installation}, response.body
     end
 
-    ['my-shop', 'my-shop.myshopify.com', 'https://my-shop.myshopify.com', 'http://my-shop.myshopify.com'].each do |good_url|
+    test "#new should render a full-page if the store param value is not a shop" do
+      non_shop_address = "example.com"
+      get :new, params: { store: non_shop_address }
+      assert_response :ok
+      assert_match %r{Spiffy Stores App — Installation}, response.body
+    end
+
+    ['my-shop', 'my-shop.spiffystores.com', 'https://my-shop.spiffystores.com', 'http://my-shop.spiffystores.com'].each do |good_url|
       test "#create should authenticate the shop for the URL (#{good_url})" do
-        ShopifyApp.configuration.embedded_app = true
-        auth_url = '/auth/shopify?shop=my-shop.myshopify.com'
-        post :create, shop: good_url
-        assert_match /window\.top\.location\.href = "#{Regexp.escape(auth_url)}"/, response.body
+        spiffy_stores_domain = 'my-shop.spiffystores.com'
+        post :create, params: { store: good_url }
+        assert_redirected_to_authentication(spiffy_stores_domain, response)
       end
     end
 
-    ['my-shop', 'my-shop.myshopify.io', 'https://my-shop.myshopify.io', 'http://my-shop.myshopify.io'].each do |good_url|
-      test "#create should authenticate the shop for the URL (#{good_url}) with custom myshopify_domain" do
-        ShopifyApp.configuration.embedded_app = true
-        ShopifyApp.configuration.myshopify_domain = 'myshopify.io'
-        auth_url = '/auth/shopify?shop=my-shop.myshopify.io'
-        post :create, shop: good_url
-        assert_match /window\.top\.location\.href = "#{Regexp.escape(auth_url)}"/, response.body
+    ['my-shop', 'my-shop.spiffystores.io', 'https://my-shop.spiffystores.io', 'http://my-shop.spiffystores.io'].each do |good_url|
+      test "#create should authenticate the shop for the URL (#{good_url}) with custom spiffy_stores_domain" do
+        SpiffyStoresApp.configuration.spiffy_stores_domain = 'spiffystores.io'
+        spiffy_stores_domain = 'my-shop.spiffystores.io'
+        post :create, params: { store: good_url }
+        assert_redirected_to_authentication(spiffy_stores_domain, response)
       end
     end
 
-    ['myshop.com', 'myshopify.com', 'shopify.com', 'two words', 'store.myshopify.com.evil.com', '/foo/bar'].each do |bad_url|
-      test "#create should return an error for a non-myshopify URL (#{bad_url})" do
-        post :create, shop: bad_url
+    ['myshop.com', 'spiffystores.com', 'spiffystores.com.au', 'two words', 'store.spiffystores.com.evil.com', '/foo/bar'].each do |bad_url|
+      test "#create should return an error for a non-spiffystores URL (#{bad_url})" do
+        post :create, params: { store: bad_url }
         assert_response :redirect
         assert_redirected_to '/'
+        assert_equal I18n.t('invalid_shop_url'), flash[:error]
       end
     end
 
     test "#create should render the login page if the shop param doesn't exist" do
       post :create
-      assert_response :redirect
       assert_redirected_to '/'
     end
 
-    test '#callback should have a success flash message' do
-      mock_shopify_omniauth
-
-      get :callback, shop: 'shop'
-      assert_equal flash[:notice], 'Logged In'
-    end
-
-    test '#callback should have a success flash message in Spanish' do
-      I18n.locale = :es
-      mock_shopify_omniauth
-
-      get :callback, shop: 'shop'
-      assert_equal flash[:notice], 'Has iniciado sesión'
-    end
-
     test '#callback should flash error when omniauth is not present' do
-      get :callback, shop: 'shop'
-      assert_equal flash[:error], 'Could not log in to Shopify store'
+      get :callback, params: { store: 'shop' }
+      assert_equal flash[:error], 'Could not log in to Spiffy Stores store'
     end
 
     test '#callback should flash error in Spanish' do
       I18n.locale = :es
-      get :callback, shop: 'shop'
-      assert_equal flash[:error], 'No se pudo iniciar sesión en tu tienda de Shopify'
+      get :callback, params: { store: 'shop' }
+      assert_equal flash[:error], 'No se pudo iniciar sesión en tu tienda de Spiffy Stores'
     end
 
-    test "#callback should setup a shopify session" do
-      mock_shopify_omniauth
+    test "#callback should setup a spiffy_stores session" do
+      mock_spiffy_omniauth
 
-      get :callback, shop: 'shop'
-      assert_not_nil session[:shopify]
-      assert_equal 'shop.myshopify.com', session[:shopify_domain]
+      get :callback, params: { store: 'shop' }
+      assert_not_nil session[:spiffy_stores]
+      assert_equal 'shop.spiffystores.com', session[:spiffy_stores_domain]
+    end
+
+    test "#callback should setup a spiffy_stores session with a user for online mode" do
+      mock_spiffy_user_omniauth
+
+      get :callback, params: { store: 'shop' }
+      assert_not_nil session[:spiffy_stores]
+      assert_equal 'shop.spiffystores.com', session[:spiffy_stores_domain]
+      assert_equal 'user_object', session[:spiffy_stores_user]
     end
 
     test "#callback should start the WebhooksManager if webhooks are configured" do
-      ShopifyApp.configure do |config|
+      SpiffyStoresApp.configure do |config|
         config.webhooks = [{topic: 'carts/update', address: 'example-app.com/webhooks'}]
       end
 
-      ShopifyApp::WebhooksManager.expects(:queue)
+      SpiffyStoresApp::WebhooksManager.expects(:queue)
 
-      mock_shopify_omniauth
-      get :callback, shop: 'shop'
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
     end
 
     test "#callback doesn't run the WebhooksManager if no webhooks are configured" do
-      ShopifyApp.configure do |config|
+      SpiffyStoresApp.configure do |config|
         config.webhooks = []
       end
 
-      ShopifyApp::WebhooksManager.expects(:queue).never
+      SpiffyStoresApp::WebhooksManager.expects(:queue).never
 
-      mock_shopify_omniauth
-      get :callback, shop: 'shop'
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
     end
 
-    test "#destroy should clear shopify from session and redirect to login with notice" do
+    test "#destroy should clear spiffy_stores from session and redirect to login with notice" do
       shop_id = 1
-      session[:shopify] = shop_id
-      session[:shopify_domain] = 'shop1.myshopify.com'
+      session[:spiffy_stores] = shop_id
+      session[:spiffy_stores_domain] = 'shop1.spiffystores.com'
+      session[:spiffy_stores_user] = { 'id' => 1, 'email' => 'foo@example.com' }
 
       get :destroy
 
-      assert_nil session[:shopify]
-      assert_nil session[:shopify_domain]
+      assert_nil session[:spiffy_stores]
+      assert_nil session[:spiffy_stores_domain]
+      assert_nil session[:spiffy_stores_user]
       assert_redirected_to login_path
       assert_equal 'Successfully logged out', flash[:notice]
     end
@@ -146,20 +150,85 @@ module ShopifyApp
     test '#destroy should redirect with notice in spanish' do
       I18n.locale = :es
       shop_id = 1
-      session[:shopify] = shop_id
-      session[:shopify_domain] = 'shop1.myshopify.com'
+      session[:spiffy_stores] = shop_id
+      session[:spiffy_stores_domain] = 'shop1.spiffystores.com'
 
       get :destroy
 
       assert_equal 'Cerrar sesión', flash[:notice]
     end
 
+    test "#callback calls #perform_after_authenticate_job and performs inline when inline is true" do
+      SpiffyStoresApp.configure do |config|
+        config.after_authenticate_job = { job: SpiffyStores::AfterAuthenticateJob, inline: true }
+      end
+
+      SpiffyStores::AfterAuthenticateJob.expects(:perform_now)
+
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
+    end
+
+    test "#callback calls #perform_after_authenticate_job and performs asynchronous when inline isn't true" do
+      SpiffyStoresApp.configure do |config|
+        config.after_authenticate_job = { job: SpiffyStores::AfterAuthenticateJob, inline: false }
+      end
+
+      SpiffyStores::AfterAuthenticateJob.expects(:perform_later)
+
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
+    end
+
+    test "#callback doesn't call #perform_after_authenticate_job if job is nil" do
+      SpiffyStoresApp.configure do |config|
+        config.after_authenticate_job = { job: nil, inline: false }
+      end
+
+      SpiffyStores::AfterAuthenticateJob.expects(:perform_later).never
+
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
+    end
+
+    test "#callback calls #perform_after_authenticate_job and performs async if inline isn't present" do
+      SpiffyStoresApp.configure do |config|
+        config.after_authenticate_job = { job: SpiffyStores::AfterAuthenticateJob }
+      end
+
+      SpiffyStores::AfterAuthenticateJob.expects(:perform_later)
+
+      mock_spiffy_omniauth
+      get :callback, params: { store: 'shop' }
+    end
+
     private
 
-    def mock_shopify_omniauth
-      OmniAuth.config.add_mock(:shopify, provider: :shopify, uid: 'shop.myshopify.com', credentials: {token: '1234'})
-      request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:shopify] if request
-      request.env['omniauth.params'] = { shop: 'shop.myshopify.com' } if request
+    def mock_spiffy_omniauth
+      OmniAuth.config.add_mock(:spiffy, provider: :spiffy, uid: 'shop.spiffystores.com', credentials: {token: '1234'})
+      request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:spiffy] if request
+      request.env['omniauth.params'] = { store: 'shop.spiffystores.com' } if request
+    end
+
+    def mock_spiffy_user_omniauth
+      OmniAuth.config.add_mock(:spiffy,
+        provider: :spiffy,
+        uid: 'shop.spiffystores.com',
+        credentials: {token: '1234'},
+        extra: {associated_user: 'user_object'}
+      )
+      request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:spiffy] if request
+      request.env['omniauth.params'] = { store: 'shop.spiffystores.com' } if request
+    end
+
+    def assert_redirected_to_authentication(shop_domain, response)
+      auth_url = "/auth/spiffy"
+
+      assert_template 'shared/redirect'
+      assert_select '[id=redirection-target]', 1 do |elements|
+        assert_equal "{\"myspiffyUrl\":\"https://#{shop_domain}\",\"url\":\"#{auth_url}\"}",
+          elements.first['data-target']
+      end
     end
   end
 end

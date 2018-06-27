@@ -14,11 +14,11 @@ module GeneratorTestHelpers
   end
 
   def provide_existing_initializer_file
-    copy_to_generator_root("config/initializers", "shopify_app.rb")
+    copy_to_generator_root("config/initializers", "spiffy_stores_app.rb")
   end
 
   def provide_existing_initializer_file_with_webhooks
-    copy_to_generator_root("config/initializers", "shopify_app_with_webhooks.rb", rename: 'shopify_app.rb')
+    copy_to_generator_root("config/initializers", "spiffy_stores_app_with_webhooks.rb", rename: 'spiffy_stores_app.rb')
   end
 
   private

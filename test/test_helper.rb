@@ -14,4 +14,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 class ActiveSupport::TestCase
   include GeneratorTestHelpers
+
+  def before_setup
+    super
+    SpiffyStoresAppConfigurer.call
+  end
 end

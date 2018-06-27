@@ -14,12 +14,12 @@
 ActiveRecord::Schema.define(version: 20160212213112) do
 
   create_table "shops", force: :cascade do |t|
-    t.string   "shopify_domain", null: false
-    t.string   "shopify_token",  null: false
+    t.string   "spiffy_stores_domain", null: false
+    t.string   "spiffy_stores_token",  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "shops", ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
+  add_index "shops", ["spiffy_stores_domain"], name: "index_shops_on_spiffy_stores_domain", unique: true
 
 end

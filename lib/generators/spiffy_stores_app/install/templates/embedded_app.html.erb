@@ -2,8 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>SpiffyStores Embedded Example App</title>
+    <% application_name = SpiffyStoresApp.configuration.application_name %>
+    <title><%= application_name %></title>
     <%= stylesheet_link_tag 'application' %>
+    <%= javascript_include_tag 'application', "data-turbolinks-track" => true %>
     <%= csrf_meta_tags %>
   </head>
 
@@ -18,7 +20,7 @@
 
     <%= render 'layouts/flash_messages' %>
 
-    <script src="https://asset1.spiffystores.com/s/assets/external/app.js?<%= Time.now.strftime('%Y%m%d%H') %>"></script>
+    <script src="https://server1.spiffystores.com/global/app.js?<%= Time.now.strftime('%Y%m%d%H') %>"></script>
 
     <script type="text/javascript">
       SpiffyStoresApp.init({
@@ -28,8 +30,6 @@
         forceRedirect: true
       });
     </script>
-
-    <%= javascript_include_tag 'application', "data-turbolinks-track" => true %>
 
     <% if content_for?(:javascript) %>
       <div id="ContentForJavascript" data-turbolinks-temporary>

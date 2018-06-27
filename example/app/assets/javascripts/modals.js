@@ -1,9 +1,9 @@
 window.alertModal = function(){
-  ShopifyApp.Modal.alert('Message for an alert window.');
+  SpiffyStoresApp.Modal.alert('Message for an alert window.');
 }
 
 window.confirmModal = function () {
-  ShopifyApp.Modal.confirm({
+  SpiffyStoresApp.Modal.confirm({
     title: "Are you sure you want to delete this?",
     message: "Do you want to delete your account? This can't be undone.",
     okButton: "Yes, delete it",
@@ -11,25 +11,25 @@ window.confirmModal = function () {
     style: 'danger'
   }, function(result){
     if (result)
-      ShopifyApp.flashNotice("Delete has been confirmed.")
+      SpiffyStoresApp.flashNotice("Delete has been confirmed.")
     else
-      ShopifyApp.flashNotice("Delete has been cancelled.")
+      SpiffyStoresApp.flashNotice("Delete has been cancelled.")
   });
 }
 
 window.inputModal = function (prompt) {
-  ShopifyApp.Modal.input(prompt, function(result, data){
+  SpiffyStoresApp.Modal.input(prompt, function(result, data){
     if(result){
-      ShopifyApp.flashNotice("Received: \"" + data + "\"");
+      SpiffyStoresApp.flashNotice("Received: \"" + data + "\"");
     }
     else{
-      ShopifyApp.flashError("Input cancelled.");
+      SpiffyStoresApp.flashError("Input cancelled.");
     }
   });
 }
 
 window.newModal = function(path, title){
-  ShopifyApp.Modal.open({
+  SpiffyStoresApp.Modal.open({
     src: path,
     title: title,
     height: 400,
@@ -39,26 +39,26 @@ window.newModal = function(path, title){
         label: "OK",
         message: 'modal_ok',
         callback: function(message){
-          ShopifyApp.Modal.close("ok");
+          SpiffyStoresApp.Modal.close("ok");
         }
       },
       secondary: {
         label: "Cancel",
         callback: function(message){
-          ShopifyApp.Modal.close("cancel");
+          SpiffyStoresApp.Modal.close("cancel");
         }
       }
     },
   }, function(result){
     if (result == "ok")
-      ShopifyApp.flashNotice("'Ok' button pressed")
+      SpiffyStoresApp.flashNotice("'Ok' button pressed")
     else if (result == "cancel")
-      ShopifyApp.flashNotice("'Cancel' button pressed")
+      SpiffyStoresApp.flashNotice("'Cancel' button pressed")
   });
 }
 
 window.newButtonModal = function(path, title){
-  ShopifyApp.Modal.open({
+  SpiffyStoresApp.Modal.open({
     src: path,
     title: title,
     height: 400,
@@ -71,7 +71,7 @@ window.newButtonModal = function(path, title){
       secondary: [
         {
           label: "Close",
-          callback: function(message){ ShopifyApp.Modal.close("close"); }
+          callback: function(message){ SpiffyStoresApp.Modal.close("close"); }
         },
         {
           label: "Normal",
@@ -92,8 +92,8 @@ window.newButtonModal = function(path, title){
     },
   }, function(result){
     if (result)
-      ShopifyApp.flashNotice("'" + result + "' button pressed")
+      SpiffyStoresApp.flashNotice("'" + result + "' button pressed")
     else
-      ShopifyApp.flashNotice("No result returned")
+      SpiffyStoresApp.flashNotice("No result returned")
   });
 }

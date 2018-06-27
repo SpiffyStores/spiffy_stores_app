@@ -3,28 +3,25 @@ require 'test_helper'
 class UtilsTest < ActiveSupport::TestCase
 
   setup do
-    ShopifyApp.configuration = nil
+    SpiffyStoresApp.configuration = nil
   end
 
-  ['my-shop', 'my-shop.myshopify.com', 'https://my-shop.myshopify.com', 'http://my-shop.myshopify.com'].each do |good_url|
+  ['my-shop', 'my-shop.spiffystores.com', 'https://my-shop.spiffystores.com', 'http://my-shop.spiffystores.com'].each do |good_url|
     test "sanitize_shop_domain for (#{good_url})" do
-      ShopifyApp.configuration.embedded_app = true
-      assert ShopifyApp::Utils.sanitize_shop_domain(good_url)
+      assert SpiffyStoresApp::Utils.sanitize_shop_domain(good_url)
     end
   end
 
-  ['my-shop', 'my-shop.myshopify.io', 'https://my-shop.myshopify.io', 'http://my-shop.myshopify.io'].each do |good_url|
-    test "sanitize_shop_domain URL (#{good_url}) with custom myshopify_domain" do
-      ShopifyApp.configuration.embedded_app = true
-      ShopifyApp.configuration.myshopify_domain = 'myshopify.io'
-      assert ShopifyApp::Utils.sanitize_shop_domain(good_url)
+  ['my-shop', 'my-shop.spiffystores.io', 'https://my-shop.spiffystores.io', 'http://my-shop.spiffystores.io'].each do |good_url|
+    test "sanitize_shop_domain URL (#{good_url}) with custom spiffy_stores_domain" do
+      SpiffyStoresApp.configuration.spiffy_stores_domain = 'spiffystores.io'
+      assert SpiffyStoresApp::Utils.sanitize_shop_domain(good_url)
     end
   end
 
-  ['myshop.com', 'myshopify.com', 'shopify.com', 'two words', 'store.myshopify.com.evil.com', '/foo/bar'].each do |bad_url|
-    test "sanitize_shop_domain for a non-myshopify URL (#{bad_url})" do
-      assert_nil ShopifyApp::Utils.sanitize_shop_domain(bad_url)
+  ['myshop.com', 'spiffystores.com', 'spiffystores.com.au', 'two words', 'store.spiffystores.com.evil.com', '/foo/bar'].each do |bad_url|
+    test "sanitize_shop_domain for a non-spiffystores URL (#{bad_url})" do
+      assert_nil SpiffyStoresApp::Utils.sanitize_shop_domain(bad_url)
     end
   end
-
 end

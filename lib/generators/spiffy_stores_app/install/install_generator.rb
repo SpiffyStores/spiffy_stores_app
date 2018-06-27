@@ -1,5 +1,4 @@
 require 'rails/generators/base'
-require 'rails/generators/active_record'
 
 module SpiffyStoresApp
   module Generators
@@ -7,15 +6,17 @@ module SpiffyStoresApp
       include Rails::Generators::Migration
       source_root File.expand_path('../templates', __FILE__)
 
+      class_option :application_name, type: :array, default: ['My', 'Spiffy', 'Stores', 'App']
       class_option :api_key, type: :string, default: '<api_key>'
       class_option :secret, type: :string, default: '<secret>'
-      class_option :scope, type: :string, default: 'read_orders, read_products'
+      class_option :scope, type: :array, default: ['read_orders,', 'read_products']
       class_option :embedded, type: :string, default: 'true'
 
       def create_spiffy_stores_app_initializer
+        @application_name = format_array_argument(options['application_name'])
         @api_key = options['api_key']
         @secret = options['secret']
-        @scope = options['scope']
+        @scope = format_array_argument(options['scope'])
 
         template 'spiffy_stores_app.rb', 'config/initializers/spiffy_stores_app.rb'
       end
@@ -27,27 +28,8 @@ module SpiffyStoresApp
 
         inject_into_file(
           'config/initializers/omniauth.rb',
-          File.read(File.expand_path(find_in_source_paths('spiffy_stores_provider.rb'))),
+          File.read(File.expand_path(find_in_source_paths('spiffy_provider.rb'))),
           after: "Rails.application.config.middleware.use OmniAuth::Builder do\n"
-        )
-      end
-
-      def create_spiffy_stores_session_repository_initializer
-        copy_file 'spiffy_stores_session_repository.rb', 'config/initializers/spiffy_stores_session_repository.rb'
-      end
-
-      def inject_embedded_app_options_to_application
-        if embedded_app?
-          application "config.action_dispatch.default_headers.delete('X-Frame-Options')"
-          application "config.action_dispatch.default_headers['P3P'] = 'CP=\"Not used\"'"
-        end
-      end
-
-      def inject_into_application_controller
-        inject_into_class(
-          "app/controllers/application_controller.rb",
-          'ApplicationController',
-          "  include SpiffyStoresApp::LoginProtection\n"
         )
       end
 
@@ -66,6 +48,10 @@ module SpiffyStoresApp
 
       def embedded_app?
         options['embedded'] == 'true'
+      end
+
+      def format_array_argument(array)
+        array.join(' ').tr('"', '')
       end
     end
   end

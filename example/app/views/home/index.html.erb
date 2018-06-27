@@ -1,14 +1,14 @@
 <% content_for :javascript do %>
   <script type="text/javascript">
     window.mainPageTitle = 'Main Page';
-    ShopifyApp.ready(function(){
-      ShopifyApp.Bar.initialize({
+    SpiffyStoresApp.ready(function(){
+      SpiffyStoresApp.Bar.initialize({
         title: window.mainPageTitle,
-        icon: '/shopify.png',
+        icon: '/spiffy_stores.png',
         buttons: {
           secondary: {
             label: "Documentation",
-            href: "http://docs.shopify.com/embedded-app-sdk",
+            href: "https://www.spiffystores.com.au/kb/Available_Apps",
             target: 'new'
           }
         }
@@ -17,22 +17,22 @@
   </script>
 <% end %>
 
-<h2>Shopify Embedded Example.</h2>
+<h2>Spiffy Stores Embedded Example.</h2>
 
-<p>This application demos the various ways an app can now interact with the Shopify Admin. See the project README for details.</p>
+<p>This application demos the various ways an app can now interact with the Spiffy Stores Toolbox. See the project README for details.</p>
 
 <p><a href="regular_app_page">Links to another page</a> work normally.</p>
 
 <h2>Function calls</h2>
 <ul>
-  <li><a href="#" onclick="ShopifyApp.Bar.loadingOff()">Turn spinner off</a></li>
-  <li><a href="#" onclick="ShopifyApp.Bar.loadingOn()">Turn spinner on</a></li>
-  <li><a href="#" onclick="window.mainPageTitle = window.mainPageTitle + '!'; ShopifyApp.Bar.setTitle(window.mainPageTitle)">Add an exclamation mark to the title</a></li>
-  <li><a href="#" onclick="ShopifyApp.redirect('/orders')">Redirect to /orders within the Shopify Admin</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.Bar.loadingOff()">Turn spinner off</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.Bar.loadingOn()">Turn spinner on</a></li>
+  <li><a href="#" onclick="window.mainPageTitle = window.mainPageTitle + '!'; SpiffyStoresApp.Bar.setTitle(window.mainPageTitle)">Add an exclamation mark to the title</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.redirect('/orders')">Redirect to /orders within the Spiffy Stores Toolbox</a></li>
 
-  <li><a href="#" onclick="ShopifyApp.flashNotice('Flash a notice message.');">Flash notice</a></li>
-  <li><a href="#" onclick="ShopifyApp.flashError('Flash an error message.');">Flash error</a></li>
-  <li><a href="#" onclick="ShopifyApp.Bar.setPagination({previous: {loading: false, callback: function(){alert('Previous clicked'); } }}); return false">Add pagination buttons</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.flashNotice('Flash a notice message.');">Flash notice</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.flashError('Flash an error message.');">Flash error</a></li>
+  <li><a href="#" onclick="SpiffyStoresApp.Bar.setPagination({previous: {loading: false, callback: function(){alert('Previous clicked'); } }}); return false">Add pagination buttons</a></li>
 </ul>
 
 

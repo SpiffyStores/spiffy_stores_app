@@ -12,11 +12,11 @@ module SpiffyStoresApp
       end
 
       def create_shop_migration
-        copy_migration 'create_shops.rb'
+        migration_template 'db/migrate/create_shops.erb', 'db/migrate/create_shops.rb'
       end
 
-      def create_session_storage_initializer
-        copy_file 'spiffy_stores_session_repository.rb', 'config/initializers/spiffy_stores_session_repository.rb', force: true
+      def update_spiffy_stores_app_initializer
+        gsub_file 'config/initializers/spiffy_stores_app.rb', 'SpiffyStoresApp::InMemorySessionStore', 'Shop'
       end
 
       def create_shop_fixtures
@@ -25,12 +25,8 @@ module SpiffyStoresApp
 
       private
 
-      def copy_migration(migration_name, config = {})
-        migration_template(
-          "db/migrate/#{migration_name}",
-          "db/migrate/#{migration_name}",
-          config
-        )
+      def rails_migration_version
+        Rails.version.match(/\d\.\d/)[0]
       end
 
       # for generating a timestamp when using `create_migration`

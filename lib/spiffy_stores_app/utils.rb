@@ -7,7 +7,7 @@ module SpiffyStoresApp
       name.sub!(%r|https?://|, '')
 
       u = URI("http://#{name}")
-      u.host && u.host.ends_with?(".#{SpiffyStoresApp.configuration.spiffy_stores_domain}") ? u.host : nil
+      u.host if u.host&.match(/^[a-z0-9][a-z0-9\-]*[a-z0-9]\.#{Regexp.escape(SpiffyStoresApp.configuration.spiffy_stores_domain)}$/)
     rescue URI::InvalidURIError
       nil
     end

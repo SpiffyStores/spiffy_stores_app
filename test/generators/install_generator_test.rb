@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'generators/shopify_app/install/install_generator'
+require 'generators/spiffy_stores_app/install/install_generator'
 
 class InstallGeneratorTest < Rails::Generators::TestCase
-  tests ShopifyApp::Generators::InstallGenerator
+  tests SpiffyStoresApp::Generators::InstallGenerator
   destination File.expand_path("../tmp", File.dirname(__FILE__))
 
   setup do
@@ -12,67 +12,53 @@ class InstallGeneratorTest < Rails::Generators::TestCase
     provide_existing_application_controller
   end
 
-  test "creates the ShopifyApp initializer" do
+  test "creates the SpiffyStoresApp initializer" do
     run_generator
-    assert_file "config/initializers/shopify_app.rb" do |shopify_app|
-      assert_match 'config.api_key = "<api_key>"', shopify_app
-      assert_match 'config.secret = "<secret>"', shopify_app
-      assert_match 'config.scope = "read_orders, read_products"', shopify_app
-      assert_match "config.embedded_app = true", shopify_app
+    assert_file "config/initializers/spiffy_stores_app.rb" do |spiffy_stores_app|
+      assert_match 'config.application_name = "My Spiffy Stores App"', spiffy_stores_app
+      assert_match 'config.api_key = "<api_key>"', spiffy_stores_app
+      assert_match 'config.secret = "<secret>"', spiffy_stores_app
+      assert_match 'config.scope = "read_orders, read_products"', spiffy_stores_app
+      assert_match "config.embedded_app = true", spiffy_stores_app
+      assert_match "config.after_authenticate_job = false", spiffy_stores_app
     end
   end
 
-  test "creates the ShopifyApp initializer with args" do
-    run_generator %w(--api_key key --secret shhhhh --scope read_orders,write_products)
-    assert_file "config/initializers/shopify_app.rb" do |shopify_app|
-      assert_match 'config.api_key = "key"', shopify_app
-      assert_match 'config.secret = "shhhhh"', shopify_app
-      assert_match 'config.scope = "read_orders,write_products"', shopify_app
-      assert_match "config.embedded_app = true", shopify_app
+  test "creates the SpiffyStoresApp initializer with args" do
+    run_generator %w(--application_name Test Name --api_key key --secret shhhhh --scope read_orders, write_products)
+    assert_file "config/initializers/spiffy_stores_app.rb" do |spiffy_stores_app|
+      assert_match 'config.application_name = "Test Name"', spiffy_stores_app
+      assert_match 'config.api_key = "key"', spiffy_stores_app
+      assert_match 'config.secret = "shhhhh"', spiffy_stores_app
+      assert_match 'config.scope = "read_orders, write_products"', spiffy_stores_app
+      assert_match 'config.embedded_app = true', spiffy_stores_app
+      assert_match 'config.session_repository = SpiffyStoresApp::InMemorySessionStore', spiffy_stores_app
     end
   end
 
-  test "creates the ShopifyApp initializer for non embedded app" do
+  test "creates the SpiffyStoresApp initializer with double-quoted args" do
+    run_generator %w(--application_name "Test Name" --api_key key --secret shhhhh --scope "read_orders, write_products")
+    assert_file "config/initializers/spiffy_stores_app.rb" do |spiffy_stores_app|
+      assert_match 'config.application_name = "Test Name"', spiffy_stores_app
+      assert_match 'config.api_key = "key"', spiffy_stores_app
+      assert_match 'config.secret = "shhhhh"', spiffy_stores_app
+      assert_match 'config.scope = "read_orders, write_products"', spiffy_stores_app
+      assert_match 'config.embedded_app = true', spiffy_stores_app
+      assert_match 'config.session_repository = SpiffyStoresApp::InMemorySessionStore', spiffy_stores_app
+    end
+  end
+
+  test "creates the SpiffyStoresApp initializer for non embedded app" do
     run_generator %w(--embedded false)
-    assert_file "config/initializers/shopify_app.rb" do |shopify_app|
-      assert_match "config.embedded_app = false", shopify_app
+    assert_file "config/initializers/spiffy_stores_app.rb" do |spiffy_stores_app|
+      assert_match "config.embedded_app = false", spiffy_stores_app
     end
   end
 
   test "creats and injects into omniauth initializer" do
     run_generator
     assert_file "config/initializers/omniauth.rb" do |omniauth|
-      assert_match "provider :shopify", omniauth
-    end
-  end
-
-  test "creates the default shopify_session_repository" do
-    run_generator
-    assert_file "config/initializers/shopify_session_repository.rb" do |file|
-      assert_match "ShopifyApp::SessionRepository.storage = InMemorySessionStore", file
-    end
-  end
-
-  test "adds the embedded app options to application.rb" do
-    run_generator
-    assert_file "config/application.rb" do |application|
-      assert_match "config.action_dispatch.default_headers.delete('X-Frame-Options')", application
-      assert_match "config.action_dispatch.default_headers['P3P'] = 'CP=\"Not used\"'", application
-    end
-  end
-
-  test "doesn't add embedd options if -embedded false" do
-    run_generator %w(--embedded false)
-    assert_file "config/application.rb" do |application|
-      refute_match "config.action_dispatch.default_headers.delete('X-Frame-Options')", application
-      refute_match "config.action_dispatch.default_headers['P3P'] = 'CP=\"Not used\"'", application
-    end
-  end
-
-  test "injects into application controller" do
-    run_generator
-    assert_file "app/controllers/application_controller.rb" do |controller|
-      assert_match "  include ShopifyApp::LoginProtection\n", controller
+      assert_match "provider :spiffy", omniauth
     end
   end
 
@@ -85,7 +71,7 @@ class InstallGeneratorTest < Rails::Generators::TestCase
   test "adds engine to routes" do
     run_generator
     assert_file "config/routes.rb" do |routes|
-      assert_match "mount ShopifyApp::Engine, at: '/'", routes
+      assert_match "mount SpiffyStoresApp::Engine, at: '/'", routes
     end
   end
 end

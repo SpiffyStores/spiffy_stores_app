@@ -4,7 +4,7 @@ class OrderUpdateJob < ActiveJob::Base
   def perform; end
 end
 
-module ShopifyApp
+module SpiffyStoresApp
   class WebhooksControllerTest < ActionDispatch::IntegrationTest
     include ActiveJob::TestHelper
 
@@ -20,7 +20,7 @@ module ShopifyApp
 
     test "passes webhook to the job" do
       webhook = {'foo' => 'bar'}
-      job_args = {shop_domain: "test.myshopify.com", webhook: webhook}
+      job_args = {shop_domain: "test.spiffystores.com", webhook: webhook}
 
       OrderUpdateJob.expects(:perform_later).with(job_args)
 
@@ -29,7 +29,7 @@ module ShopifyApp
     end
 
     test "returns error for webhook with no job class" do
-      assert_raises ShopifyApp::MissingWebhookJobError do
+      assert_raises SpiffyStoresApp::MissingWebhookJobError do
         send_webhook 'test', {foo: :bar}
       end
     end
@@ -37,7 +37,7 @@ module ShopifyApp
     private
 
     def send_webhook(name, data)
-      post shopify_app.webhooks_path(name), data, {'HTTP_X_SHOPIFY_SHOP_DOMAIN' => 'test.myshopify.com'}
+      post spiffy_stores_app.webhooks_path(name), params: data, headers: {'HTTP_X_SPIFFY_STORES_SHOP_DOMAIN' => 'test.spiffystores.com'}
     end
   end
 end

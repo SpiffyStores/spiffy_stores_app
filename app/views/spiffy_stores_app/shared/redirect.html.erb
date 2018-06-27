@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <base target="_top">
+  <title>Redirecting…</title>
+  <%= javascript_include_tag('spiffy_stores_app/redirect', crossorigin: 'anonymous', integrity: true) %>
+</head>
+<body>
+  <%=
+  content_tag(:div, nil,
+    id: 'redirection-target',
+    data: {
+      target: {
+        myspiffyUrl: "https://#{current_spiffy_stores_domain}",
+        url: url,
+      },
+    },
+  )
+  %>
+</body>
+</html>

@@ -8,11 +8,11 @@ Gem::Specification.new do |s|
   s.author      = "Spiffy Stores"
   s.summary     = %q{This gem is used to get quickly started with the Spiffy Stores API}
 
-  s.required_ruby_version = ">= 2.2.4"
+  s.required_ruby_version = ">= 2.3.1"
 
-  s.add_runtime_dependency('rails', '>= 4.2.6')
-  s.add_runtime_dependency('spiffy_stores_api', '~> 4.2.2')
-# s.add_runtime_dependency('omniauth-shopify-oauth2', '~> 1.1.11')
+  s.add_runtime_dependency('rails', '>= 5.0.0')
+  s.add_runtime_dependency('spiffy_stores_api', '~> 4.11.0')
+  s.add_runtime_dependency('omniauth-spiffy-oauth2', '~> 1.2.0')
 
   s.add_development_dependency('rake')
   s.add_development_dependency('byebug')

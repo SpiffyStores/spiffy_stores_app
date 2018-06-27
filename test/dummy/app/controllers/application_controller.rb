@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::Base
-  include ShopifyApp::LoginProtection
+  include SpiffyStoresApp::LoginProtection
 end

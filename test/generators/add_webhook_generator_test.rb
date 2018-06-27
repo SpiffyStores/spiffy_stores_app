@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'generators/shopify_app/add_webhook/add_webhook_generator'
+require 'generators/spiffy_stores_app/add_webhook/add_webhook_generator'
 
 class AddWebhookGeneratorTest < Rails::Generators::TestCase
-  tests ShopifyApp::Generators::AddWebhookGenerator
+  tests SpiffyStoresApp::Generators::AddWebhookGenerator
   destination File.expand_path("../tmp", File.dirname(__FILE__))
   arguments %w(-t products/update -a https://example.com/webhooks/product_update)
 
@@ -15,7 +15,7 @@ class AddWebhookGeneratorTest < Rails::Generators::TestCase
 
     run_generator
 
-    assert_file "config/initializers/shopify_app.rb" do |config|
+    assert_file "config/initializers/spiffy_stores_app.rb" do |config|
       assert_match 'config.webhooks = [', config
       assert_match new_webhook, config
     end
@@ -26,7 +26,7 @@ class AddWebhookGeneratorTest < Rails::Generators::TestCase
 
     run_generator
 
-    assert_file "config/initializers/shopify_app.rb" do |config|
+    assert_file "config/initializers/spiffy_stores_app.rb" do |config|
       assert_match 'config.webhooks = [', config
       assert_match exisiting_webhook, config
       assert_match new_webhook, config
