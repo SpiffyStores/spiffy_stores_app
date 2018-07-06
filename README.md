@@ -1,6 +1,6 @@
 SpiffyStores App
 ================
-[![Build Status](https://travis-ci.com/SpiffyStores/spiffy_stores_app.png)](https://travis-ci.com/SpiffyStores/spiffy_stores_app)
+[![Build Status](https://travis-ci.com/SpiffyStores/spiffy_stores_app.svg?branch=master)](https://travis-ci.com/SpiffyStores/spiffy_stores_app)
 
 Spiffy Stores Application Rails engine and generator
 
