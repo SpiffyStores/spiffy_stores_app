@@ -24,7 +24,7 @@ class HomeControllerGeneratorTest < Rails::Generators::TestCase
   test "creates the home index view with embedded options" do
     run_generator
     assert_file "app/views/home/index.html.erb" do |index|
-      assert_match "SpiffyStoresApp.ready", index
+      assert_match "SpiffyApp.ready", index
     end
   end
 
@@ -32,7 +32,7 @@ class HomeControllerGeneratorTest < Rails::Generators::TestCase
     SpiffyStoresApp.configuration.embedded_app = false
     run_generator
     assert_file "app/views/home/index.html.erb" do |index|
-      refute_match "SpiffyStoresApp.ready", index
+      refute_match "SpiffyApp.ready", index
     end
   end
 

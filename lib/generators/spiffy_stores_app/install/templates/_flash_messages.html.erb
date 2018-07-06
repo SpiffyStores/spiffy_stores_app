@@ -5,11 +5,11 @@
   if (!document.documentElement.hasAttribute("data-turbolinks-preview")) {
     document.addEventListener(eventName, function flash() {
       <% if flash[:notice] %>
-        SpiffyStoresApp.flashNotice(<%== flash[:notice].to_json %>);
+        SpiffyApp.flashNotice(<%== flash[:notice].to_json %>);
       <% end %>
 
       <% if flash[:error] %>
-        SpiffyStoresApp.flashError(<%== flash[:error].to_json %>);
+        SpiffyApp.flashError(<%== flash[:error].to_json %>);
       <% end %>
 
       document.removeEventListener(eventName, flash)

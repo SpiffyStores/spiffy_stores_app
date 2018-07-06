@@ -1,8 +1,8 @@
 <% content_for :javascript do %>
   <script type="text/javascript">
     window.mainPageTitle = 'Main Page';
-    SpiffyStoresApp.ready(function(){
-      SpiffyStoresApp.Bar.initialize({
+    SpiffyApp.ready(function(){
+      SpiffyApp.Bar.initialize({
         title: window.mainPageTitle,
         icon: '/spiffy_stores.png',
         buttons: {
@@ -25,14 +25,14 @@
 
 <h2>Function calls</h2>
 <ul>
-  <li><a href="#" onclick="SpiffyStoresApp.Bar.loadingOff()">Turn spinner off</a></li>
-  <li><a href="#" onclick="SpiffyStoresApp.Bar.loadingOn()">Turn spinner on</a></li>
-  <li><a href="#" onclick="window.mainPageTitle = window.mainPageTitle + '!'; SpiffyStoresApp.Bar.setTitle(window.mainPageTitle)">Add an exclamation mark to the title</a></li>
-  <li><a href="#" onclick="SpiffyStoresApp.redirect('/orders')">Redirect to /orders within the Spiffy Stores Toolbox</a></li>
+  <li><a href="#" onclick="SpiffyApp.Bar.loadingOff()">Turn spinner off</a></li>
+  <li><a href="#" onclick="SpiffyApp.Bar.loadingOn()">Turn spinner on</a></li>
+  <li><a href="#" onclick="window.mainPageTitle = window.mainPageTitle + '!'; SpiffyApp.Bar.setTitle(window.mainPageTitle)">Add an exclamation mark to the title</a></li>
+  <li><a href="#" onclick="SpiffyApp.redirect('/orders')">Redirect to /orders within the Spiffy Stores Toolbox</a></li>
 
-  <li><a href="#" onclick="SpiffyStoresApp.flashNotice('Flash a notice message.');">Flash notice</a></li>
-  <li><a href="#" onclick="SpiffyStoresApp.flashError('Flash an error message.');">Flash error</a></li>
-  <li><a href="#" onclick="SpiffyStoresApp.Bar.setPagination({previous: {loading: false, callback: function(){alert('Previous clicked'); } }}); return false">Add pagination buttons</a></li>
+  <li><a href="#" onclick="SpiffyApp.flashNotice('Flash a notice message.');">Flash notice</a></li>
+  <li><a href="#" onclick="SpiffyApp.flashError('Flash an error message.');">Flash error</a></li>
+  <li><a href="#" onclick="SpiffyApp.Bar.setPagination({previous: {loading: false, callback: function(){alert('Previous clicked'); } }}); return false">Add pagination buttons</a></li>
 </ul>
 
 

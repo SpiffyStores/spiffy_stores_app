@@ -2,8 +2,8 @@
   <script type="text/javascript">
      window.mainPageTitle = 'Form page';
 
-    SpiffyStoresApp.ready(function(){
-      SpiffyStoresApp.Bar.initialize({
+    SpiffyApp.ready(function(){
+      SpiffyApp.Bar.initialize({
         title: window.mainPageTitle,
         icon: '/spiffy_stores.png',
         buttons: {
@@ -20,11 +20,11 @@
       });
 
     <% if flash[:notice] %>
-      SpiffyStoresApp.flashNotice("<%= flash[:notice] %>");
+      SpiffyApp.flashNotice("<%= flash[:notice] %>");
     <% end %>
 
     <% if flash[:error] %>
-      SpiffyStoresApp.flashError("<%= flash[:error] %>");
+      SpiffyApp.flashError("<%= flash[:error] %>");
     <% end %>
 
     });

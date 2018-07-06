@@ -23,7 +23,7 @@ module SpiffyStoresApp
         return unless id
 
         if shop = self.find_by(id: id)
-          SpiffyStoresAPI::Session.new(shop.spiffy_stores_domain, shop.spiffy_stores_token)
+          SpiffyStoresAPI::Session.new(shop.spiffy_stores_domain, shop.spiffy_stores_token, shop)
         end
       end
     end

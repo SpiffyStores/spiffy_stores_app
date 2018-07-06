@@ -4,11 +4,11 @@
 
     document.addEventListener(eventName, function() {
       <% if flash[:notice] %>
-        SpiffyStoresApp.flashNotice("<%= j flash[:notice].html_safe %>");
+        SpiffyApp.flashNotice("<%= j flash[:notice].html_safe %>");
       <% end %>
 
       <% if flash[:error] %>
-        SpiffyStoresApp.flashError("<%= j flash[:error].html_safe %>");
+        SpiffyApp.flashError("<%= j flash[:error].html_safe %>");
       <% end %>
     });
   </script>

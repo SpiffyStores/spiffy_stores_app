@@ -33,33 +33,34 @@ web:
 $ git remote add heroku git@heroku.com:appinfive.git
 ```
 
-3. Create a new App in the partners area
------------------------------------------
-[https://app.shopify.com/services/partners/api_clients](https://app.shopify.com/services/partners/api_clients)
+3. Contact Spiffy Stores to create app
+--------------------------------------
+You will be given the app credentials and the redirect_uri will be set to the required value.
+
 * set the callback url to `https://<name>.herokuapp.com/`
 * choose an embedded app
-* set the redirect_uri to `https://<name>.herokuapp.com/auth/shopify/callback`
+* set the redirect_uri to `https://<name>.herokuapp.com/auth/spiffy/callback`
 
 
 4. Add SpiffyStoresApp to gemfile
 ----------------------------
 ```sh
-$ echo "gem 'shopify_app'" >> Gemfile
+$ echo "gem 'spiffy_stores_app'" >> Gemfile
 $ bundle install
 ```
 
-Note - its recommended to use the latest released version. Check the git tags to see the latest release and then add it to your Gemfile e.g `gem 'shopify_app', '~> 7.0.0'`
+Note - its recommended to use the latest released version. Check the git tags to see the latest release and then add it to your Gemfile e.g `gem 'spiffy_stores_app', '~> 7.0.0'`
 
-5. Run the ShopifyApp generator
--------------------------------
+5. Run the SpiffyStoresApp generator
+------------------------------------
 ```sh
-# use the keys from your app in the partners area
-$ rails generate shopify_app --api_key <shopify_api_key> --secret <shopify_api_secret>
+# use the keys for your app that have been provided to you
+$ rails generate spiffy_stores_app --api_key <spiffy_stores_api_key> --secret <spiffy_stores_api_secret>
 $ git add .
-$ git commit -m 'generated shopify app'
+$ git commit -m 'generated spiffy stores app'
 ```
 
-If you forget to set your keys or redirect uri above, you will find them in the shopify_app initializer at: `/config/initializers/shopify_app.rb`.
+If you forget to set your keys or redirect uri above, you will find them in the spiffy_stores_app initializer at: `/config/initializers/spiffy_stores_app.rb`.
 
 We recommend adding a gem or utilizing ENV variables to handle your keys before releasing your app.
 
