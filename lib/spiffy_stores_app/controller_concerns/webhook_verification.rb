@@ -17,9 +17,10 @@ module SpiffyStoresApp
     def hmac_valid?(data)
       secret = SpiffyStoresApp.configuration.secret
       digest = OpenSSL::Digest.new('sha256')
+      encoded_params = JSON.parse(data).map {|i| "#{URI.escape(i[0].to_s, '&=%')}=#{URI.escape(i[1].to_s, '&%')}"}.sort.join('&')
       ActiveSupport::SecurityUtils.secure_compare(
         spiffy_stores_hmac,
-        Base64.encode64(OpenSSL::HMAC.digest(digest, secret, data)).strip
+        OpenSSL::HMAC.hexdigest(digest, secret, encoded_params)
       )
     end
 
