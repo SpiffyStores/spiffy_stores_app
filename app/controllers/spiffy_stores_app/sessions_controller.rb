@@ -34,6 +34,21 @@ module SpiffyStoresApp
       redirect_to login_url
     end
 
+    def failure
+      message = "#{I18n.t('could_not_log_in')} - #{params['message']}"
+      flash[:error] = message
+      origin_url = params[:origin]
+      redirect_url = login_url
+
+      if origin_url
+        uri = URI.parse(origin_url)
+        store = URI.decode_www_form(uri.query || '').to_h['store']
+        redirect_url = "https://#{store}/admin/apps?flash_error=#{message}" if store
+      end
+
+      redirect_to redirect_url
+    end
+
     private
 
     def authenticate

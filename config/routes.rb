@@ -3,6 +3,7 @@ SpiffyStoresApp::Engine.routes.draw do
     get 'login' => :new, :as => :login
     post 'login' => :create, :as => :authenticate
     get 'auth/spiffy/callback' => :callback
+    get 'auth/failure' => :failure
     get 'logout' => :destroy, :as => :logout
   end
 
