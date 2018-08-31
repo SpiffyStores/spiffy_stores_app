@@ -1,3 +1,7 @@
+8.2.9
+-----
+* Fix flash messages in failure handling
+
 8.2.8
 -----
 * Add failure handling
