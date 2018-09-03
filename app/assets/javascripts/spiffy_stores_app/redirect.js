@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     normalizedLink.href = targetInfo.url;
 
     data = JSON.stringify({
-      message: 'SpiffyStores.API.remoteRedirect',
+      message: 'Spiffy.API.remoteRedirect',
       data: { location: normalizedLink.href }
     });
     window.parent.postMessage(data, targetInfo.myspiffyUrl);
