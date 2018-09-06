@@ -1,3 +1,3 @@
 module SpiffyStoresApp
-  VERSION = '8.2.9'.freeze
+  VERSION = '8.2.11'.freeze
 end
