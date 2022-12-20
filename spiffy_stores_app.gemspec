@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('rails', '>= 5.0.0')
   s.add_runtime_dependency('spiffy_stores_api', '~> 4.11.0')
-  s.add_runtime_dependency('omniauth-spiffy-oauth2', '~> 2.0.0')
+  s.add_runtime_dependency('omniauth-spiffy-oauth2', '> 2.0.0')
 
   s.add_development_dependency('rake')
   s.add_development_dependency('byebug')
