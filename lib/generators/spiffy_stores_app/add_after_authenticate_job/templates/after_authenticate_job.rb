@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SpiffyStores
   class AfterAuthenticateJob < ActiveJob::Base
     def perform(shop_domain:)

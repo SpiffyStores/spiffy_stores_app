@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SpiffyStoresApp
   class InMemorySessionStore
     class EnvironmentError < StandardError; end

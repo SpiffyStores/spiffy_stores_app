@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class HomeController < SpiffyStoresApp::AuthenticatedController
   def index
   end

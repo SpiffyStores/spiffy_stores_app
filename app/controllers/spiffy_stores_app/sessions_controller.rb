@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SpiffyStoresApp
   class SessionsController < ActionController::Base
     include SpiffyStoresApp::LoginProtection

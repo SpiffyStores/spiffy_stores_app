@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SpiffyStoresApp
   class SessionRepository
     class ConfigurationError < StandardError; end

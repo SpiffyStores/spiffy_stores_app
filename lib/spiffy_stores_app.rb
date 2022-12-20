@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spiffy_stores_app/version'
 
 # deps
